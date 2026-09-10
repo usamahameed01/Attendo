@@ -1,0 +1,17 @@
+<svg width="96" height="96" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="attendoA" x1="8" y1="42" x2="34" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6D66F5"/>
+      <stop offset="0.55" stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#1E1B6B"/>
+    </linearGradient>
+    <linearGradient id="attendoCheck" x1="15" y1="38" x2="38" y2="21" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5B53EE"/>
+      <stop offset="1" stop-color="#2A24B0"/>
+    </linearGradient>
+  </defs>
+  <path d="M28 3.6 A12 12 0 0 1 40.9 23.8" stroke="#4F46E5" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M35.1 5.5 34.7 8M40 8 38.2 9.8M42.5 13.3h-2.5" stroke="#4F46E5" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M8.5 41 18.5 10 29.5 41" stroke="url(#attendoA)" stroke-width="6.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 30 23 38.8 39.5 18.5" stroke="url(#attendoCheck)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

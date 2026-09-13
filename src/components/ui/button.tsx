@@ -13,6 +13,7 @@ export type ButtonProps = Omit<PressableProps, 'style' | 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: ReactNode;
+  textColor?: keyof ColorTokens;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -30,6 +31,7 @@ export function Button({
   size,
   icon,
   disabled,
+  textColor: textColorProp,
   style,
   ...rest
 }: ButtonProps) {
@@ -40,7 +42,7 @@ export function Button({
   const outlined = variant === 'secondary' || variant === 'reject';
 
   let background = 'transparent';
-  let textColor: keyof ColorTokens = 'accentText';
+  let textColor: keyof ColorTokens = textColorProp ?? 'accentText';
 
   if (filled) {
     background = colors.accent;

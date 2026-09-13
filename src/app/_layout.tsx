@@ -9,9 +9,11 @@ import {
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider as NavThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { useSettingsHydrated } from '@/stores/settings-store';
-import { ThemeProvider, useTheme } from '@/theme';
+import { useAuthStore } from '@/stores/auth-store';
+import { useStoresHydrated } from '@/stores/use-stores-hydrated';
+import { statusBarScreenOptions, ThemeProvider, useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,8 +25,8 @@ export default function RootLayout() {
     Inter_700Bold,
     Inter_800ExtraBold,
   });
-  const hydrated = useSettingsHydrated();
-  const ready = (fontsLoaded || !!fontError) && hydrated;
+  const storesHydrated = useStoresHydrated();
+  const ready = (fontsLoaded || !!fontError) && storesHydrated;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -33,14 +35,17 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <ThemeProvider>
-      <NavigationStack />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <NavigationStack />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 
 function NavigationStack() {
   const { colors, isDark } = useTheme();
+  const onboarded = useAuthStore((s) => s.onboarded);
   const base = isDark ? DarkTheme : DefaultTheme;
 
   return (
@@ -56,7 +61,19 @@ function NavigationStack() {
           primary: colors.accent,
         },
       }}>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{ headerShown: false, ...statusBarScreenOptions(isDark ? 'light' : 'dark') }}>
+        <Stack.Protected guard={!onboarded}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+        <Stack.Protected guard={onboarded}>
+          <Stack.Screen name="(app)" />
+          <Stack.Screen name="(checkin)" options={{ presentation: 'fullScreenModal' }} />
+          <Stack.Screen name="(enroll)" options={{ presentation: 'fullScreenModal' }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack.Protected>
+        <Stack.Screen name="dev/components" />
+      </Stack>
     </NavThemeProvider>
   );
 }

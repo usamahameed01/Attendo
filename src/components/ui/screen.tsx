@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { ScrollView, View, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,7 +17,7 @@ export function Screen({
   contentContainerStyle,
   ...rest
 }: ScreenProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   const content = padded ? { paddingHorizontal: space.screen } : null;
@@ -27,7 +26,6 @@ export function Screen({
     <View
       style={[{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top }, style]}
       {...rest}>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
       {scroll ? (
         <ScrollView
           contentContainerStyle={[content, { paddingBottom: insets.bottom + space.xxl }, contentContainerStyle]}

@@ -1,8 +1,9 @@
 import { Bell, ChevronDown, LogOut } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Logo } from '@/components/logo';
+import { ThemeModeSwitch } from '@/components/theme-mode-switch';
 import {
   Button,
   Card,
@@ -16,10 +17,7 @@ import {
   Text,
   Toast,
 } from '@/components/ui';
-import { radius, space, useTheme, useThemeMode } from '@/theme';
-import type { ThemeMode } from '@/stores/settings-store';
-
-const MODES: ThemeMode[] = ['system', 'light', 'dark'];
+import { radius, space, useTheme } from '@/theme';
 
 export default function ComponentsScreen() {
   const { colors } = useTheme();
@@ -46,7 +44,7 @@ export default function ComponentsScreen() {
         </IconButton>
       </View>
 
-      <ThemeSwitcher />
+      <ThemeModeSwitch />
 
       <Section title="Buttons">
         <Button label="Primary" />
@@ -181,47 +179,6 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
         {title}
       </Text>
       {children}
-    </View>
-  );
-}
-
-function ThemeSwitcher() {
-  const { colors } = useTheme();
-  const { mode, setMode } = useThemeMode();
-
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        gap: 6,
-        padding: 6,
-        borderRadius: radius.pill,
-        backgroundColor: colors.surfaceAlt,
-      }}>
-      {MODES.map((option) => {
-        const active = option === mode;
-        return (
-          <Pressable
-            key={option}
-            accessibilityRole="button"
-            onPress={() => setMode(option)}
-            style={{
-              flex: 1,
-              paddingVertical: 9,
-              borderRadius: radius.pill,
-              alignItems: 'center',
-              backgroundColor: active ? colors.accent : 'transparent',
-            }}>
-            <Text
-              variant="caption"
-              weight={600}
-              color={active ? 'onAccent' : 'textSecondary'}
-              uppercase>
-              {option}
-            </Text>
-          </Pressable>
-        );
-      })}
     </View>
   );
 }

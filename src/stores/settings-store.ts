@@ -1,41 +1,46 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSyncExternalStore } from 'react';
-import { Platform } from 'react-native';
 import { create } from 'zustand';
-import { createJSONStorage, persist, type StateStorage } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { persistStorage } from './persist-storage';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
+export type CheckinMethod = 'face' | 'manual';
 
 type SettingsState = {
   themeMode: ThemeMode;
+  checkinMethod: CheckinMethod;
+  notificationsEnabled: boolean;
+  devForceOffline: boolean;
+  devForceOutsideGeofence: boolean;
   setThemeMode: (mode: ThemeMode) => void;
+  setCheckinMethod: (method: CheckinMethod) => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
+  setDevForceOffline: (value: boolean) => void;
+  setDevForceOutsideGeofence: (value: boolean) => void;
 };
-
-// Static web rendering runs this module in Node, where AsyncStorage's web backend has no window.
-const hasBrowserStorage = Platform.OS !== 'web' || typeof window !== 'undefined';
-
-const storage: StateStorage = hasBrowserStorage
-  ? AsyncStorage
-  : { getItem: async () => null, setItem: async () => {}, removeItem: async () => {} };
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       themeMode: 'system',
+      checkinMethod: 'face',
+      notificationsEnabled: true,
+      devForceOffline: false,
+      devForceOutsideGeofence: false,
       setThemeMode: (themeMode) => set({ themeMode }),
+      setCheckinMethod: (checkinMethod) => set({ checkinMethod }),
+      setNotificationsEnabled: (notificationsEnabled) => set({ notificationsEnabled }),
+      setDevForceOffline: (devForceOffline) => set({ devForceOffline }),
+      setDevForceOutsideGeofence: (devForceOutsideGeofence) => set({ devForceOutsideGeofence }),
     }),
     {
       name: 'attendo.settings',
-      storage: createJSONStorage(() => storage),
-      partialize: ({ themeMode }) => ({ themeMode }),
+      storage: createJSONStorage(() => persistStorage),
+      partialize: ({ themeMode, checkinMethod, notificationsEnabled }) => ({
+        themeMode,
+        checkinMethod,
+        notificationsEnabled,
+      }),
     },
   ),
 );
-
-export function useSettingsHydrated(): boolean {
-  return useSyncExternalStore(
-    (onChange) => useSettingsStore.persist.onFinishHydration(onChange),
-    () => useSettingsStore.persist.hasHydrated(),
-    () => false,
-  );
-}

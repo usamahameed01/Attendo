@@ -1,6 +1,7 @@
 export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './button';
 export { Card, type CardProps } from './card';
 export { Divider } from './divider';
+export { EmptyState } from './empty-state';
 export { IconButton, type IconButtonProps } from './icon-button';
 export { Pill, toneTokens, type PillProps, type Tone } from './pill';
 export { Screen, type ScreenProps } from './screen';

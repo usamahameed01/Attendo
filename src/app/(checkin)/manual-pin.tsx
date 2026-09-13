@@ -9,7 +9,12 @@ import { Card, Screen, Text } from '@/components/ui';
 import { seedPin, seedUser } from '@/data/seed';
 import { radius, space, useTheme } from '@/theme';
 
-const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'face', '0', 'back'] as const;
+const ROWS = [
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9'],
+  ['face', '0', 'back'],
+] as const;
 
 export default function ManualPinScreen() {
   const { colors } = useTheme();
@@ -37,7 +42,7 @@ export default function ManualPinScreen() {
     return () => clearTimeout(id);
   }, [pin, action, router]);
 
-  function press(key: (typeof KEYS)[number]) {
+  function press(key: (typeof ROWS)[number][number]) {
     if (key === 'back') {
       setPin((p) => p.slice(0, -1));
     } else if (key === 'face') {
@@ -99,41 +104,39 @@ export default function ManualPinScreen() {
 
       <View style={{ flex: 1 }} />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          gap: 14,
-          paddingBottom: space.xxl,
-        }}>
-        {KEYS.map((key) => (
-          <Pressable
-            key={key}
-            onPress={() => press(key)}
-            style={{
-              width: '31%',
-              height: 66,
-              borderRadius: radius.button,
-              backgroundColor: key === 'face' || key === 'back' ? 'transparent' : colors.surface,
-              borderWidth: key === 'face' || key === 'back' ? 0 : 1,
-              borderColor: colors.borderSoft,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            {key === 'back' ? (
-              <Delete size={26} color={colors.textSecondary} strokeWidth={1.9} />
-            ) : key === 'face' ? (
-              !forced && (
-                <Text variant="body" weight={600} color="textSecondary">
-                  Face ID
-                </Text>
-              )
-            ) : (
-              <Text weight={600} style={{ fontSize: 27 }}>
-                {key}
-              </Text>
-            )}
-          </Pressable>
+      <View style={{ gap: 14, paddingBottom: space.xxl }}>
+        {ROWS.map((row, i) => (
+          <View key={i} style={{ flexDirection: 'row', gap: 14 }}>
+            {row.map((key) => (
+              <Pressable
+                key={key}
+                onPress={() => press(key)}
+                style={{
+                  flex: 1,
+                  height: 66,
+                  borderRadius: radius.button,
+                  backgroundColor: key === 'face' || key === 'back' ? 'transparent' : colors.surface,
+                  borderWidth: key === 'face' || key === 'back' ? 0 : 1,
+                  borderColor: colors.borderSoft,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {key === 'back' ? (
+                  <Delete size={26} color={colors.textSecondary} strokeWidth={1.9} />
+                ) : key === 'face' ? (
+                  !forced && (
+                    <Text variant="body" weight={600} color="textSecondary">
+                      Face ID
+                    </Text>
+                  )
+                ) : (
+                  <Text weight={600} style={{ fontSize: 27 }}>
+                    {key}
+                  </Text>
+                )}
+              </Pressable>
+            ))}
+          </View>
         ))}
       </View>
     </Screen>
